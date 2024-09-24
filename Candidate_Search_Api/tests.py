@@ -14,14 +14,17 @@ class CandidateSearchTest(TestCase):
     def test_search_exact_match(self):
         query = "Ajay Kumar Yadav"
         results = search_candidates(query)
-        self.assertEqual([candidate.name for candidate in results], [
+        self.assertEqual([candidate.name for candidate in results], 
+        [
             "Ajay Kumar Yadav"
         ])
+        
 
     def test_search_partial_match(self):
         query = "Ajay Kumar Yadav"
         results = search_candidates(query)
-        self.assertEqual([candidate.name for candidate in results], [
+        self.assertEqual([candidate.name for candidate in results], 
+        [
             "Ajay Kumar Yadav", 
             "Ajay Kumar Sharma", 
             "Kumar Sharma Yadav", 
@@ -32,7 +35,8 @@ class CandidateSearchTest(TestCase):
     def test_search_single_word(self):
         query = "Ajay"
         results = search_candidates(query)
-        self.assertEqual([candidate.name for candidate in results], [
+        self.assertEqual([candidate.name for candidate in results], 
+        [
             "Ajay Kumar Yadav", 
             "Ajay Kumar Sharma", 
             "Ajay Singh Kumar"
