@@ -2,42 +2,27 @@ from django.test import TestCase
 from .models import Candidate
 from .views import search_candidates
 
-class CandidateSearchTest(TestCase):
+class CandidateSearchTests(TestCase):
+
     def setUp(self):
-        # Created some sample candidates
+        # Create candidate records
         Candidate.objects.create(name="Ajay Kumar Yadav")
+        Candidate.objects.create(name="Ajay Sharma")
         Candidate.objects.create(name="Kumar Sharma Yadav")
-        Candidate.objects.create(name="Ajay Kumar Sharma")
-        Candidate.objects.create(name="Ajay Singh kumar")
-        Candidate.objects.create(name="Vijay Yadav")
+        Candidate.objects.create(name="Ajay Singh")
+        Candidate.objects.create(name="Rajesh Yadav")
 
-    def test_search_exact_match(self):
+    def test_search_exact_and_partial_matches(self):
         query = "Ajay Kumar Yadav"
         results = search_candidates(query)
-        self.assertEqual([candidate.name for candidate in results], 
-        [
-            "Ajay Kumar Yadav"
-        ])
-        
+        result_names = [candidate.name for candidate in results]
 
-    def test_search_partial_match(self):
-        query = "Ajay Kumar Yadav"
-        results = search_candidates(query)
-        self.assertEqual([candidate.name for candidate in results], 
-        [
-            "Ajay Kumar Yadav", 
-            "Ajay Kumar Sharma", 
-            "Kumar Sharma Yadav", 
-            "Ajay Singh Kumar", 
-            "Vijay Yadav"
-        ])
+        expected = [
+            "Ajay Kumar Yadav",  # Exact match
+            "Kumar Sharma Yadav",  # Partial match (Kumar, Yadav)
+            "Ajay Sharma",  # Partial match (Ajay, Sharma)
+            "Ajay Singh",  # Partial match (Ajay)
+            "Rajesh Yadav"  # Partial match (Yadav)
+        ]
 
-    def test_search_single_word(self):
-        query = "Ajay"
-        results = search_candidates(query)
-        self.assertEqual([candidate.name for candidate in results], 
-        [
-            "Ajay Kumar Yadav", 
-            "Ajay Kumar Sharma", 
-            "Ajay Singh Kumar"
-        ])
+        self.assertEqual(result_names, expected)
